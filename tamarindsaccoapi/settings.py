@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "cloudinary",
     # Local apps
     "accounts",
+    "verification",
     "nextofkin",
     "paymentaccounts",
     # Savings
