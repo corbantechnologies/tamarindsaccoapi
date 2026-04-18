@@ -45,7 +45,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         ],
     )
     email = serializers.EmailField(
-        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+        required=False, allow_blank=True, allow_null=True
     )
     avatar = serializers.ImageField(use_url=True, required=False)
     savings = SavingSerializer(many=True, read_only=True)
@@ -104,6 +104,15 @@ class BaseUserSerializer(serializers.ModelSerializer):
         GuarantorProfile.objects.create(member=user, is_eligible=True)
 
         return user
+
+    def update(self, instance, validated_data):
+        # Remove password from validated_data to prevent plain text saving
+        # Password changes should go through specific endpoints or handle hashing
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        
+        return super().update(instance, validated_data)
 
 
 """

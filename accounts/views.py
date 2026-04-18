@@ -316,6 +316,7 @@ class BulkMemberUploadCSVTemplateView(APIView):
         writer.writerow(
             [
                 "first_name",
+                "middle_name",
                 "last_name",
                 "member_no",
                 "email",
@@ -323,6 +324,8 @@ class BulkMemberUploadCSVTemplateView(APIView):
                 "phone",
                 "payroll_number",
                 "employer",
+                "employment_type",
+                "password"
             ]
         )
 
