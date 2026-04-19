@@ -60,13 +60,13 @@ class LoanProductTemplateDownloadView(APIView):
                 "Name",
                 "Interest Method",
                 "Interest Rate",
-                "Processing Fee",
+                # "Processing Fee",
                 "Interest Period",
                 "Calculation Schedule",
                 "GL Principal Asset",
                 "GL Interest Revenue",
-                "GL Penalty Revenue",
-                "GL Processing Fee Revenue",
+                # "GL Penalty Revenue",
+                # "GL Processing Fee Revenue",
                 "Is Active",
             ]
         )
@@ -159,12 +159,12 @@ class BulkLoanProductUploadView(generics.CreateAPIView):
                     except Exception:
                         interest_rate = Decimal("0.00")
 
-                    try:
-                        processing_fee = Decimal(
-                            row.get("Processing Fee", "0.00").strip()
-                        )
-                    except Exception:
-                        processing_fee = Decimal("0.00")
+                    # try:
+                    #     processing_fee = Decimal(
+                    #         row.get("Processing Fee", "0.00").strip()
+                    #     )
+                    # except Exception:
+                    #     processing_fee = Decimal("0.00")
 
                     interest_period = row.get("Interest Period", "Monthly").strip()
                     calculation_schedule = row.get(
@@ -177,25 +177,25 @@ class BulkLoanProductUploadView(generics.CreateAPIView):
                     gl_interest_revenue = (
                         row.get("GL Interest Revenue", "").strip() or None
                     )
-                    gl_penalty_revenue = (
-                        row.get("GL Penalty Revenue", "").strip() or None
-                    )
-                    gl_processing_fee_revenue = (
-                        row.get("GL Processing Fee Revenue", "").strip() or None
-                    )
+                    # gl_penalty_revenue = (
+                    #     row.get("GL Penalty Revenue", "").strip() or None
+                    # )
+                    # gl_processing_fee_revenue = (
+                    #     row.get("GL Processing Fee Revenue", "").strip() or None
+                    # )
 
                     product_data = {
                         "name": name,
                         "interest_method": interest_method,
                         "interest_rate": str(interest_rate),
-                        "processing_fee": str(processing_fee),
+                        # "processing_fee": str(processing_fee),
                         "interest_period": interest_period,
                         "calculation_schedule": calculation_schedule,
                         "is_active": is_active,
                         "gl_principal_asset": gl_principal_asset,
                         "gl_interest_revenue": gl_interest_revenue,
-                        "gl_penalty_revenue": gl_penalty_revenue,
-                        "gl_processing_fee_revenue": gl_processing_fee_revenue,
+                        # "gl_penalty_revenue": gl_penalty_revenue,
+                        # "gl_processing_fee_revenue": gl_processing_fee_revenue,
                     }
 
                     LoanProduct.objects.create(**product_data)
