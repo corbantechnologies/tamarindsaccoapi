@@ -18,7 +18,6 @@ class UniversalIdModel(models.Model):
 
 
 class MemberNumberModel(models.Model):
-    # Unique member number: some use their payroll number
     member_no = models.CharField(
         max_length=20,
         unique=True,

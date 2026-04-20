@@ -52,20 +52,18 @@ class User(
     AbstractBaseUser,
     PermissionsMixin,
     UniversalIdModel,
-    MemberNumberModel,
     TimeStampedModel,
+    MemberNumberModel,
     ReferenceModel,
 ):
-
     # Personal Details
-    salutation = models.CharField(max_length=25, blank=True, null=True)
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=255, blank=True, null=True)
-    avatar = CloudinaryField("avatars", blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    avatar = CloudinaryField("tamarindsacco_avatars", blank=True, null=True)
 
     # Identity
     id_type = models.CharField(max_length=255, blank=True, null=True)
@@ -73,13 +71,13 @@ class User(
     tax_pin = models.CharField(max_length=255, blank=True, null=True)
 
     # Contact & Address Details
-    phone = models.CharField(max_length=25, blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
     county = models.CharField(max_length=255, blank=True, null=True)
 
-    # Employment Status
+    # Employment
+    payroll_number = models.CharField(max_length=255, blank=True, null=True)
     employment_type = models.CharField(max_length=255, blank=True, null=True)
     employer = models.CharField(max_length=255, blank=True, null=True)
-    job_title = models.CharField(max_length=255, blank=True, null=True)
 
     # Account status
     is_approved = models.BooleanField(default=False)
@@ -88,22 +86,21 @@ class User(
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_member = models.BooleanField(default=True)
-    is_system_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-
     is_sacco_admin = models.BooleanField(default=False)
     is_sacco_staff = models.BooleanField(default=False)
     is_treasurer = models.BooleanField(default=False)
     is_bookkeeper = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    # Password Reset
+    password_reset_code = models.CharField(max_length=6, blank=True, null=True)
+    password_reset_code_created_at = models.DateTimeField(blank=True, null=True)
 
     USERNAME_FIELD = "member_no"
     REQUIRED_FIELDS = [
-        "password",
-        "salutation",
         "first_name",
         "last_name",
-        "gender",
-        "employment_type",
+        "password",
     ]
 
     objects = UserManager()
@@ -113,8 +110,11 @@ class User(
         verbose_name_plural = "Users"
         ordering = ["-created_at"]
 
-    def __str__(self):
-        return f"{self.member_no} - {self.first_name} {self.last_name}"
-
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def get_member_no(self):
+        return self.member_no
+
+    def __str__(self):
+        return f"{self.member_no} - {self.first_name} {self.last_name}"

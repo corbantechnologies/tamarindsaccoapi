@@ -17,22 +17,58 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='VentureAccount',
+            name="VentureAccount",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('reference', models.CharField(blank=True, max_length=255, null=True, unique=True)),
-                ('account_number', models.CharField(default=ventureaccounts.utils.generate_venture_account_number, max_length=20, unique=True)),
-                ('balance', models.DecimalField(decimal_places=2, default=0.0, max_digits=12)),
-                ('is_active', models.BooleanField(default=True)),
-                ('identity', models.CharField(blank=True, max_length=100, null=True, unique=True)),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='venture_accounts', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "reference",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, unique=True
+                    ),
+                ),
+                (
+                    "account_number",
+                    models.CharField(
+                        default=ventureaccounts.utils.generate_venture_account_number,
+                        max_length=20,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "balance",
+                    models.DecimalField(decimal_places=2, default=0.0, max_digits=12),
+                ),
+                ("is_active", models.BooleanField(default=True)),
+                (
+                    "identity",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, unique=True
+                    ),
+                ),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="venture_accounts",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Venture Account',
-                'verbose_name_plural': 'Venture Accounts',
-                'ordering': ['-created_at'],
+                "verbose_name": "Venture Account",
+                "verbose_name_plural": "Venture Accounts",
+                "ordering": ["-created_at"],
             },
         ),
     ]

@@ -397,10 +397,10 @@ class AdminLoanApplicationSerializer(LoanApplicationSerializer):
     def create(self, validated_data):
         proj = validated_data.pop("_projection")
         member = validated_data["member"]
-        
+
         # Save application
         instance = super(LoanApplicationSerializer, self).create(validated_data)
-        
+
         instance.projection_snapshot = proj
         instance.monthly_payment = validated_data["monthly_payment"]
         instance.term_months = validated_data["term_months"]
@@ -411,12 +411,17 @@ class AdminLoanApplicationSerializer(LoanApplicationSerializer):
         instance.admin_created = True
         instance.save(
             update_fields=[
-                "projection_snapshot", "monthly_payment", "term_months", 
-                "total_interest", "repayment_amount", "processing_fee", "status",
-                "admin_created"
+                "projection_snapshot",
+                "monthly_payment",
+                "term_months",
+                "total_interest",
+                "repayment_amount",
+                "processing_fee",
+                "status",
+                "admin_created",
             ]
         )
-        
+
         # Create Loan Account
         end_date = instance.start_date
         if instance.repayment_frequency == "monthly":

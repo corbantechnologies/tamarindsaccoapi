@@ -3,7 +3,6 @@ import secrets
 import resend
 import logging
 from datetime import datetime
-
 from django.template.loader import render_to_string
 
 from tamarindsaccoapi.settings import DOMAIN
@@ -21,67 +20,30 @@ def generate_reference():
 
 
 def generate_member_number():
-    year = datetime.now().year % 100  # Last two digits of year
+    year = datetime.now().year % 100
     random_number = "".join(secrets.choice(string.digits) for _ in range(4))
     return f"MB{year}{random_number}"
 
 
-def send_registration_confirmation_email(user):
-    """
-    Resend email integration
-    """
-    email_body = ""
-    current_year = datetime.now().year
-
+def send_account_created_by_admin_email(user, activation_link=None):
+    email_body = render_to_string(
+        "account_activation_email.html",
+        {
+            "user": user,
+            "activation_link": activation_link,
+            "current_year": datetime.now().year,
+        },
+    )
+    params = {
+        "from": "Tamarind SACCO <onboarding@wananchimali.com>",
+        "to": [user.email],
+        "subject": "Activate Your Tamarind SACCO Account",
+        "html": email_body,
+    }
     try:
-        email_body = render_to_string(
-            "registration_confirmation.html",
-            {"user": user, "current_year": current_year},
-        )
-        params = {
-            "from": "Tamarind SACCO <onboarding@wananchimali.com>",
-            "to": [user.email],
-            "subject": "Registration Confirmation",
-            "html": email_body,
-        }
         response = resend.Emails.send(params)
         logger.info(f"Email sent to {user.email} with response: {response}")
         return response
-
-    except Exception as e:
-        logger.error(f"Error sending email to {user.email}: {str(e)}")
-        return None
-
-
-def send_member_number_email(user):
-    """
-    Resend email integration
-    """
-    email_body = ""
-    current_year = datetime.now().year
-    site_url = f"{DOMAIN}/login"
-    password_reset_url = f"{DOMAIN}/reset-password"
-
-    try:
-        email_body = render_to_string(
-            "member_number.html",
-            {
-                "user": user,
-                "current_year": current_year,
-                "site_url": site_url,
-                "password_reset_url": password_reset_url,
-            },
-        )
-        params = {
-            "from": "Tamarind SACCO <onboarding@wananchimali.com>",
-            "to": [user.email],
-            "subject": "Your Membership Number",
-            "html": email_body,
-        }
-        response = resend.Emails.send(params)
-        logger.info(f"Email sent to {user.email} with response: {response}")
-        return response
-
     except Exception as e:
         logger.error(f"Error sending email to {user.email}: {str(e)}")
         return None
@@ -114,91 +76,60 @@ def send_account_activated_email(user):
         return None
 
 
-def send_verification_email(user, verification_code):
+def send_forgot_password_email(user, code):
     """
-    A function to send a verification email
+    A function to send a forgot password email
     """
-
-    email_body = ""
-    current_year = datetime.now().year
-
     try:
         email_body = render_to_string(
-            "account_verification.html",
+            "forgot_password.html",
             {
                 "user": user,
-                "verification_code": verification_code,
-                "current_year": current_year,
+                "code": code,
+                "current_year": datetime.now().year,
             },
         )
         params = {
-            "from": "Tamarind SACCO <onboarding@wananchimali.com>",
+            "from": "Tamarind SACCO <security@wananchimali.com>",
             "to": [user.email],
-            "subject": "Verify your account",
+            "subject": "Reset Your Tamarind SACCO Password",
             "html": email_body,
         }
         response = resend.Emails.send(params)
-        logger.info(f"Email sent to {user.email} with response: {response}")
+        logger.info(
+            f"Forgot password email sent to {user.email} with response: {response}"
+        )
         return response
-
     except Exception as e:
-        logger.error(f"Error sending email to {user.email}: {str(e)}")
+        logger.error(f"Error sending forgot password email to {user.email}: {str(e)}")
         return None
 
 
-def send_password_reset_email(user, verification_code):
+def send_password_reset_success_email(user):
     """
-    A function to send a password reset email
+    A function to send a password reset success email
     """
-    email_body = ""
-    current_year = datetime.now().year
-
     try:
         email_body = render_to_string(
-            "password_reset.html",
+            "password_reset_success.html",
             {
                 "user": user,
-                "verification_code": verification_code,
-                "current_year": current_year,
+                "current_year": datetime.now().year,
             },
         )
         params = {
-            "from": "Tamarind SACCO <onboarding@wananchimali.com>",
+            "from": "Tamarind SACCO <security@wananchimali.com>",
             "to": [user.email],
-            "subject": "Reset your password",
+            "subject": "Password Reset Successful - Tamarind SACCO",
             "html": email_body,
         }
         response = resend.Emails.send(params)
-        logger.info(f"Email sent to {user.email} with response: {response}")
-        return response
-
-    except Exception as e:
-        logger.error(f"Error sending email to {user.email}: {str(e)}")
-        return None
-
-
-def send_account_created_by_admin_email(user, activation_link=None):
-    email_body = render_to_string(
-        "account_activation_email.html",
-        {
-            "user": user,
-            "activation_link": activation_link,
-            "current_year": datetime.now().year,
-        },
-    )
-    params = {
-        "from": "SACCO <onboarding@wananchimali.com>",
-        "to": [user.email],
-        "subject": "Activate Your Tamarind SACCO Account",
-        "html": email_body,
-    }
-    try:
-        response = resend.Emails.send(params)
-        logger.info(f"Email sent to {user.email} with response: {response}")
+        logger.info(
+            f"Password reset success email sent to {user.email} with response: {response}"
+        )
         return response
     except Exception as e:
-        logger.error(f"Error sending email to {user.email}: {str(e)}")
+        logger.error(
+            f"Error sending password reset success email to {user.email}: {str(e)}"
+        )
         return None
-
-
-

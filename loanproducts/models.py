@@ -51,7 +51,7 @@ class LoanProduct(UniversalIdModel, TimeStampedModel, ReferenceModel):
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-        default=2.00,
+        default=0.00,
     )
     interest_period = models.CharField(
         max_length=50,

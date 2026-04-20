@@ -1,67 +1,50 @@
 import logging
 
 from savings.models import SavingsAccount
-from savingstypes.models import SavingsType
+from savingtypes.models import SavingType
 from venturetypes.models import VentureType
-from ventures.models import VentureAccount
-from loans.models import LoanAccount
-from loantypes.models import LoanType
+from ventureaccounts.models import VentureAccount
+from guarantors.models import GuarantorProfile
 from feetypes.models import FeeType
-from memberfees.models import MemberFee
-
+from feeaccounts.models import FeeAccount
 
 logger = logging.getLogger(__name__)
 
-def create_member_accounts(user):
+
+def create_member_accounts(member):
     """
-    Creates default Savings, Venture, and Loan accounts for a new member.
+    Create accounts for a member
     """
-    # Savings account creation
-    savings_types = SavingsType.objects.all()
-    created_savings = []
+    # Existing savings account creation
+    savings_types = SavingType.objects.all()
+    created_accounts = []
     for savings_type in savings_types:
         if not SavingsAccount.objects.filter(
-            member=user, account_type=savings_type
+            member=member, account_type=savings_type
         ).exists():
             account = SavingsAccount.objects.create(
-                member=user, account_type=savings_type, is_active=True
+                member=member, account_type=savings_type, is_active=True
             )
-            created_savings.append(str(account))
+            created_accounts.append(str(account))
     logger.info(
-        f"Created {len(created_savings)} SavingsAccounts for {user.member_no}: {', '.join(created_savings)}"
+        f"Created {len(created_accounts)} SavingsAccounts for {member.member_no}: {', '.join(created_accounts)}"
     )
-
-    # Venture account creation
+    # Existing venture account creation
     venture_types = VentureType.objects.all()
-    created_ventures = []
+    created_accounts = []
     for venture_type in venture_types:
         if not VentureAccount.objects.filter(
-            member=user, venture_type=venture_type
+            member=member, venture_type=venture_type
         ).exists():
             account = VentureAccount.objects.create(
-                member=user, venture_type=venture_type, is_active=True
+                member=member, venture_type=venture_type, is_active=True
             )
-            created_ventures.append(str(account))
+            created_accounts.append(str(account))
     logger.info(
-        f"Created {len(created_ventures)} VentureAccounts for {user.member_no}: {', '.join(created_ventures)}"
+        f"Created {len(created_accounts)} VentureAccounts for {member.member_no}: {', '.join(created_accounts)}"
     )
+    # Existing fee account creation
 
-    # Loan account creation
-    # loan_types = LoanType.objects.all()
-    # created_loans = []
-    # for loan_type in loan_types:
-    #     if not LoanAccount.objects.filter(
-    #         member=user, loan_type=loan_type
-    #     ).exists():
-    #         account = LoanAccount.objects.create(
-    #             member=user, loan_type=loan_type, is_active=True
-    #         )
-    #         created_loans.append(str(account))
-    # logger.info(
-    #     f"Created {len(created_loans)} LoanAccounts for {user.member_no}: {', '.join(created_loans)}"
-    # )
-
-    # Fee account creation
     # Do we this need? Say maybe contribution started and a member was not active then, so no fee account was created for them
     fee_types = FeeType.objects.filter(is_everyone=True)
     created_accounts = []
