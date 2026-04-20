@@ -16,20 +16,45 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='VerificationCode',
+            name="VerificationCode",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('purpose', models.CharField(choices=[('email_verification', 'Email Verification'), ('password_reset', 'Password Reset')], max_length=20)),
-                ('code', models.CharField(max_length=6, unique=True)),
-                ('expires_at', models.DateTimeField()),
-                ('used', models.BooleanField(default=False)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='verification_codes', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "purpose",
+                    models.CharField(
+                        choices=[
+                            ("email_verification", "Email Verification"),
+                            ("password_reset", "Password Reset"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("code", models.CharField(max_length=6, unique=True)),
+                ("expires_at", models.DateTimeField()),
+                ("used", models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="verification_codes",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Verification Code',
-                'verbose_name_plural': 'Verification Codes',
+                "verbose_name": "Verification Code",
+                "verbose_name_plural": "Verification Codes",
             },
         ),
     ]

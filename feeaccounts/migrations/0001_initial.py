@@ -12,29 +12,70 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('feetypes', '0001_initial'),
+        ("feetypes", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FeeAccount',
+            name="FeeAccount",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('reference', models.CharField(blank=True, max_length=255, null=True, unique=True)),
-                ('account_number', models.CharField(default=feeaccounts.utils.generate_fee_account_number, max_length=20, unique=True)),
-                ('amount_paid', models.DecimalField(decimal_places=2, default=0, max_digits=15)),
-                ('outstanding_balance', models.DecimalField(decimal_places=2, max_digits=15)),
-                ('is_paid', models.BooleanField(default=False)),
-                ('fee_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fee_accounts', to='feetypes.feetype')),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fee_accounts', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "reference",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, unique=True
+                    ),
+                ),
+                (
+                    "account_number",
+                    models.CharField(
+                        default=feeaccounts.utils.generate_fee_account_number,
+                        max_length=20,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "amount_paid",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=15),
+                ),
+                (
+                    "outstanding_balance",
+                    models.DecimalField(decimal_places=2, max_digits=15),
+                ),
+                ("is_paid", models.BooleanField(default=False)),
+                (
+                    "fee_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fee_accounts",
+                        to="feetypes.feetype",
+                    ),
+                ),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fee_accounts",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Fee Account',
-                'verbose_name_plural': 'Fee Accounts',
-                'ordering': ['-created_at'],
+                "verbose_name": "Fee Account",
+                "verbose_name_plural": "Fee Accounts",
+                "ordering": ["-created_at"],
             },
         ),
     ]

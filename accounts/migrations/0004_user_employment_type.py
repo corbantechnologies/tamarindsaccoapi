@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_rename_employment_type_user_payroll_number_and_more'),
+        ("accounts", "0003_rename_employment_type_user_payroll_number_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='employment_type',
+            model_name="user",
+            name="employment_type",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

@@ -9,14 +9,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('ventureaccounts', '0001_initial'),
-        ('venturetypes', '0001_initial'),
+        ("ventureaccounts", "0001_initial"),
+        ("venturetypes", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ventureaccount',
-            name='venture_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='accounts', to='venturetypes.venturetype'),
+            model_name="ventureaccount",
+            name="venture_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="accounts",
+                to="venturetypes.venturetype",
+            ),
         ),
     ]

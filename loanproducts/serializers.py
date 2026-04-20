@@ -14,13 +14,19 @@ class LoanProductSerializer(serializers.ModelSerializer):
         slug_field="name", queryset=GLAccount.objects.all()
     )
     gl_penalty_revenue = serializers.SlugRelatedField(
-        slug_field="name", queryset=GLAccount.objects.all(), required=False, allow_null=True
+        slug_field="name",
+        queryset=GLAccount.objects.all(),
+        required=False,
+        allow_null=True,
     )
     gl_interest_revenue = serializers.SlugRelatedField(
         slug_field="name", queryset=GLAccount.objects.all()
     )
     gl_processing_fee_revenue = serializers.SlugRelatedField(
-        slug_field="name", queryset=GLAccount.objects.all(), required=False, allow_null=True
+        slug_field="name",
+        queryset=GLAccount.objects.all(),
+        required=False,
+        allow_null=True,
     )
 
     class Meta:

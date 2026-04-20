@@ -44,9 +44,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             validate_password_lowercase,
         ],
     )
-    email = serializers.EmailField(
-        required=False, allow_blank=True, allow_null=True
-    )
+    email = serializers.EmailField(required=False, allow_blank=True, allow_null=True)
     avatar = serializers.ImageField(use_url=True, required=False)
     savings = SavingSerializer(many=True, read_only=True)
     fee_accounts = FeeAccountSerializer(many=True, read_only=True)
@@ -108,10 +106,10 @@ class BaseUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # Remove password from validated_data to prevent plain text saving
         # Password changes should go through specific endpoints or handle hashing
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
+        if "password" in validated_data:
+            password = validated_data.pop("password")
             instance.set_password(password)
-        
+
         return super().update(instance, validated_data)
 
 

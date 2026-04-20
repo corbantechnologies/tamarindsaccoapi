@@ -325,7 +325,7 @@ class BulkMemberUploadCSVTemplateView(APIView):
                 "payroll_number",
                 "employer",
                 "employment_type",
-                "password"
+                "password",
             ]
         )
 

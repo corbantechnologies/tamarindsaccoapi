@@ -34,4 +34,3 @@ class IsSystemAdminOrReadOnly(BasePermission):
             or request.user.is_bookkeeper
             or request.user.is_superuser
         )
-

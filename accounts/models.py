@@ -60,7 +60,7 @@ class User(
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255)
-    email = models.EmailField( blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     gender = models.CharField(max_length=255, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
     avatar = CloudinaryField("tamarindsacco_avatars", blank=True, null=True)
