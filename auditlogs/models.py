@@ -8,6 +8,8 @@ class AuditLog(UniversalIdModel, TimeStampedModel, ReferenceModel):
     module = models.CharField(max_length=255, db_index=True)
     description = models.TextField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    request_payload = models.JSONField(null=True, blank=True)
+    response_payload = models.JSONField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]
