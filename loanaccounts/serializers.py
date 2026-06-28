@@ -14,7 +14,7 @@ class LoanAccountSerializer(serializers.ModelSerializer):
     member = serializers.SlugRelatedField(
         slug_field="member_no", queryset=User.objects.all()
     )
-    member_name = serializers.CharField(source="member.full_name", read_only=True)
+    member_name = serializers.SerializerMethodField()
     product = serializers.SlugRelatedField(
         slug_field="name", queryset=LoanProduct.objects.all()
     )
@@ -54,7 +54,14 @@ class LoanAccountSerializer(serializers.ModelSerializer):
             "projection_snapshot",
             "application_details",
         )
-        read_only_fields = ("total_penalties_owed", "total_clearance_amount")
+        read_only_fields = (
+            "total_penalties_owed",
+            "total_clearance_amount",
+            "member_name",
+        )
+
+    def get_member_name(self, obj):
+        return obj.member.get_full_name()
 
     def get_application_details(self, obj):
         if obj.application:
