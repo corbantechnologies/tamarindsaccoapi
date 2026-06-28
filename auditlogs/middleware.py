@@ -41,6 +41,32 @@ class AuditLogMiddleware(MiddlewareMixin):
             else:
                 description += f" succeeded with status {response.status_code}"
                 
+            # Attempt to extract contextual payload details
+            payload_details = {}
+            try:
+                # 1. Extract from request body
+                if hasattr(request, '_body_data') and request._body_data:
+                    data = json.loads(request._body_data.decode('utf-8'))
+                    if isinstance(data, dict):
+                        sensitive_keys = ['password', 'confirm_password', 'old_password', 'new_password', 'token', 'access', 'refresh', 'pin']
+                        for key, value in data.items():
+                            if key.lower() not in sensitive_keys and isinstance(value, (str, int, float, bool)):
+                                payload_details[key] = value
+
+                # 2. Extract from response if successful to catch generated IDs/references
+                if response.status_code in [200, 201] and 'application/json' in response.get('Content-Type', ''):
+                    resp_data = json.loads(response.content.decode('utf-8'))
+                    if isinstance(resp_data, dict):
+                        for k in ['reference', 'amount', 'status', 'member_no', 'id', 'name']:
+                            if k in resp_data and k not in payload_details:
+                                payload_details[k] = resp_data[k]
+            except Exception:
+                pass
+                
+            if payload_details:
+                details_str = ", ".join([f"{k}: {v}" for k, v in payload_details.items()])
+                description += f". Context Details: {details_str}"
+                
             def _create_log():
                 AuditLog.objects.create(
                     user=user,
