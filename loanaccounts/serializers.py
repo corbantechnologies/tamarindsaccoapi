@@ -14,6 +14,7 @@ class LoanAccountSerializer(serializers.ModelSerializer):
     member = serializers.SlugRelatedField(
         slug_field="member_no", queryset=User.objects.all()
     )
+    member_name = serializers.CharField(source="member.full_name", read_only=True)
     product = serializers.SlugRelatedField(
         slug_field="name", queryset=LoanProduct.objects.all()
     )
@@ -29,6 +30,7 @@ class LoanAccountSerializer(serializers.ModelSerializer):
         model = LoanAccount
         fields = (
             "member",
+            "member_name",
             "product",
             "application",
             "account_number",
