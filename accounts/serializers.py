@@ -314,3 +314,15 @@ class ResetPasswordSerializer(serializers.Serializer):
         send_password_reset_success_email(user)
 
         return user
+
+class SuperuserCreationSerializer(BaseUserSerializer):
+    password = serializers.CharField(
+        required=True, write_only=True, allow_blank=False, allow_null=False
+    )
+
+    def create(self, validated_data):
+        # We don't use 'is_member', we use 'is_superuser' and 'is_staff'
+        user = User.objects.create_superuser(**validated_data)
+        user.is_active = True
+        user.save()
+        return user
