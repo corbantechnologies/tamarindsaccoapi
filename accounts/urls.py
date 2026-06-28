@@ -14,12 +14,14 @@ from accounts.views import (
     BulkMemberCreatedByAdminView,
     BulkMemberCreatedByAdminUploadCSVView,
     BulkMemberUploadCSVTemplateView,
+    CreateSuperuserView,
 )
 
 app_name = "accounts"
 
 urlpatterns = [
     path("token/", TokenView.as_view(), name="token"),
+    path("superusers/create/", CreateSuperuserView.as_view(), name="create-superuser"),
     path("<str:id>/", UserDetailView.as_view(), name="user-detail"),
     # System admin activities
     path("", MemberListView.as_view(), name="members"),

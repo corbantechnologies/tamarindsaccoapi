@@ -34,3 +34,16 @@ class IsSystemAdminOrReadOnly(BasePermission):
             or request.user.is_bookkeeper
             or request.user.is_superuser
         )
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class CanCreateSuperuser(BasePermission):
+    def has_permission(self, request, view):
+        # Allow if no superuser exists in the system (bootstrap mode)
+        if not User.objects.filter(is_superuser=True).exists():
+            return True
+        
+        # Otherwise, only superusers can create other superusers
+        return request.user.is_authenticated and request.user.is_superuser

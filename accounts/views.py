@@ -22,10 +22,11 @@ from accounts.serializers import (
     ResetPasswordSerializer,
     BulkMemberCreatedByAdminSerializer,
     BulkMemberCreatedByAdminUploadCSVSerializer,
+    SuperuserCreationSerializer,
 )
 from accounts.utils import send_account_activated_email
 from accounts.tools import create_member_accounts
-from accounts.permissions import IsSystemAdminOrReadOnly
+from accounts.permissions import IsSystemAdminOrReadOnly, CanCreateSuperuser
 from tamarindsaccoapi.settings import DOMAIN
 from savingtypes.models import SavingType
 from venturetypes.models import VentureType
@@ -397,4 +398,25 @@ class AdminResetPasswordView(generics.UpdateAPIView):
         super().update(request, *args, **kwargs)
         return Response(
             {"message": "Password reset successfully."}, status=status.HTTP_200_OK
+        )
+
+class CreateSuperuserView(generics.CreateAPIView):
+    """
+    Create a superuser without the command line.
+    Bootstrap mode: open if no superusers exist.
+    Otherwise requires an existing superuser token.
+    """
+    permission_classes = (CanCreateSuperuser,)
+    serializer_class = SuperuserCreationSerializer
+    queryset = User.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"detail": "Superuser created successfully", "user": serializer.data},
+            status=status.HTTP_201_CREATED,
+            headers=headers
         )
