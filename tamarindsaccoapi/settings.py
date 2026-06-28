@@ -73,6 +73,8 @@ INSTALLED_APPS = [
     "journalbatches",
     "journalentries",
     "financials",
+    # Audit
+    "auditlogs",
 ]
 
 MIDDLEWARE = [
@@ -85,6 +87,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "auditlogs.middleware.AuditLogMiddleware",
 ]
 
 CORS_ORIGIN_WHITELIST = config("CORS_ORIGIN_WHITELIST").split(",")

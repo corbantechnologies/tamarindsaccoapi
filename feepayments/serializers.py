@@ -33,6 +33,7 @@ class FeePaymentSerializer(serializers.ModelSerializer):
             "phone_number",
             "currency",
             "code",
+            "notes",
             # Mpesa fields:
             "checkout_request_id",
             "callback_url",

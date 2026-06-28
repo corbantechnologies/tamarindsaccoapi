@@ -47,6 +47,7 @@ class FeePayment(TimeStampedModel, UniversalIdModel, ReferenceModel, MpesaPaymen
     transaction_status = models.CharField(
         max_length=100, choices=TRANSACTION_STATUS_CHOICES, default="Pending"
     )
+    notes = models.TextField(blank=True, null=True, help_text="Used to explain why a fee is exceeded i.e share capital transfer")
     posted_to_gl = models.BooleanField(default=False, editable=False)
     balance_updated = models.BooleanField(default=False, editable=False)
     accounting_error = models.TextField(blank=True, null=True)
