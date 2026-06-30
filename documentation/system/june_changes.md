@@ -33,5 +33,26 @@ To eliminate reliance on the `python manage.py createsuperuser` command line uti
   - Created a custom `CanCreateSuperuser` permission class to solve the "chicken and egg" problem.
   - **Bootstrap Mode**: If exactly `0` superusers exist in the database, the endpoint temporarily allows unauthenticated requests, permitting the very first "root" superuser to be created programmatically.
   - **Strict Lockdown**: The moment the first superuser is created, the endpoint instantly locks down and strictly requires the requestor to provide a valid token from an existing superuser account.
-- **Serializer (`accounts/serializers.py`)**:
   - Implemented `SuperuserCreationSerializer` to securely force `is_superuser=True` and `is_staff=True` internally, ignoring any permission-escalation flags attempting to be passed from the client payload.
+
+## 3. Financial Transaction Date Standardization
+To support the onboarding of legacy data and ensure accounting integrity for reconciliation, the primary chronological reference for all financial events was shifted from system-generated `created_at` timestamps to explicit `transaction_date` fields.
+
+### Modules Updated
+- **Savings Deposits, Fee Payments, Loan Repayments, and Loan Disbursements:**
+  - Added `transaction_date` field to models and serializers to allow explicit date entry during transaction creation.
+  - Updated backend ledger posting services (`post_to_ledger` methods) to use `transaction_date` for General Ledger (GL) posting dates, ensuring accurate backdating and reconciliation.
+  - Updated bulk upload utilities (CSV templates and parsers) across all modules to capture `transaction_date` during batch imports.
+  - Modified the transaction summary aggregation engine (`transactions/views.py`) to filter and aggregate yearly summaries based on `transaction_date` instead of `created_at`.
+- **Frontend Adjustments**:
+  - Updated transaction creation forms and bulk import interfaces to include `transaction_date` inputs.
+
+## 4. Member Financial Summary Enhancements
+The frontend Member Financial Summary dashboard was upgraded to provide more comprehensive and flexible reporting.
+
+### Key Improvements
+- **Dynamic Year Filtering**: Introduced a year selection dropdown (defaulting to the current year and extending back 5 years). Selecting a year dynamically fetches the corresponding yearly summary from the API without reloading the page.
+- **Enhanced Statistics Cards**:
+  - Re-organized the summary grid to display detailed statistics.
+  - Extracted and added **Opening Balance** figures (balance brought forward from previous years) across Savings, Loans, and Fees.
+  - Added comprehensive metrics such as Total Withdrawals (Savings), Disbursed vs. Repaid amounts (Loans), and Target vs. Paid amounts (Fees).

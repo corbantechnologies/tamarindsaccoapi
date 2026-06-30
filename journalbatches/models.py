@@ -18,7 +18,7 @@ class JournalBatch(TimeStampedModel, UniversalIdModel, ReferenceModel):
     class Meta:
         verbose_name = "Journal Batch"
         verbose_name_plural = "Journal Batches"
-        ordering = ["-created_at"]
+        ordering = ["-posting_date"]
 
     def __str__(self):
         return f"{self.code} - {self.description}"

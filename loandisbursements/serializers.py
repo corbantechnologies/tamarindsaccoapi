@@ -26,6 +26,7 @@ class LoanDisbursementSerializer(serializers.ModelSerializer):
             "disbursed_by",
             "amount",
             "currency",
+            "transaction_date",
             "transaction_status",
             "disbursement_type",
             "transaction_code",

@@ -6,6 +6,7 @@ from accounts.abstracts import ReferenceModel, TimeStampedModel, UniversalIdMode
 from paymentaccounts.models import PaymentAccount, get_default_payment_method
 from feeaccounts.models import FeeAccount
 from feepayments.utils import generate_fee_payment_code
+from datetime import date
 from mpesa.abstracts import MpesaPaymentModel
 
 User = get_user_model()
@@ -46,6 +47,12 @@ class FeePayment(TimeStampedModel, UniversalIdModel, ReferenceModel, MpesaPaymen
     )
     transaction_status = models.CharField(
         max_length=100, choices=TRANSACTION_STATUS_CHOICES, default="Pending"
+    )
+    transaction_date = models.DateField(
+        null=True,
+        blank=True,
+        default=date.today,
+        help_text="The actual date of the transaction",
     )
     notes = models.TextField(blank=True, null=True, help_text="Used to explain why a fee is exceeded i.e share capital transfer")
     posted_to_gl = models.BooleanField(default=False, editable=False)
