@@ -68,6 +68,7 @@ class FeePaymentTemplateDownloadView(APIView):
                 "Fee Type",
                 "Fee Account Number",
                 "Amount",
+                "Transaction Date",
             ]
         )
 
@@ -83,6 +84,7 @@ class FeePaymentTemplateDownloadView(APIView):
                     acc.fee_type.name,
                     acc.account_number,
                     "",  # Empty Amount
+                    "",  # Empty Transaction Date
                 ]
             )
 
@@ -150,6 +152,7 @@ class BulkFeePaymentUploadView(generics.CreateAPIView):
                 try:
                     acc_num = row.get("Fee Account Number")
                     amount_str = row.get("Amount")
+                    transaction_date = row.get("Transaction Date", "").strip()
 
                     if not acc_num or not amount_str:
                         continue
@@ -160,6 +163,8 @@ class BulkFeePaymentUploadView(generics.CreateAPIView):
                         "payment_method": payment_method_name,
                         "transaction_status": "Completed",
                     }
+                    if transaction_date:
+                        payment_data["transaction_date"] = transaction_date
 
                     serializer = FeePaymentSerializer(data=payment_data)
                     if serializer.is_valid():
