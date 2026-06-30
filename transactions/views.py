@@ -629,7 +629,7 @@ class MemberYearlySummaryView(APIView):
 
             total_yearly_repaid = LoanPayment.objects.filter(
                 loan_account=acc,
-                payment_date__year=year,
+                transaction_date__year=year,
                 transaction_status="Completed",
                 balance_updated=True,
             ).aggregate(total=Sum("amount"))["total"] or Decimal("0")
@@ -646,7 +646,7 @@ class MemberYearlySummaryView(APIView):
 
             bf_paid = LoanPayment.objects.filter(
                 loan_account=acc,
-                payment_date__year__lt=year,
+                transaction_date__year__lt=year,
                 transaction_status="Completed",
                 balance_updated=True,
             ).aggregate(total=Sum("amount"))["total"] or Decimal("0")
@@ -669,8 +669,8 @@ class MemberYearlySummaryView(APIView):
 
                 month_paid_qs = LoanPayment.objects.filter(
                     loan_account=acc,
-                    payment_date__year=year,
-                    payment_date__month=month,
+                    transaction_date__year=year,
+                    transaction_date__month=month,
                     transaction_status="Completed",
                     balance_updated=True,
                 )
@@ -693,7 +693,7 @@ class MemberYearlySummaryView(APIView):
                 for rep in month_paid_qs:
                     transactions.append(
                         {
-                            "date": rep.payment_date.date(),
+                            "date": rep.transaction_date,
                             "type": "Loan Repayment",
                             "amount": rep.amount,
                             "reference": rep.reference,
