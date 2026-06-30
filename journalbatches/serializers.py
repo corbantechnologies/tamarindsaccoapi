@@ -18,6 +18,7 @@ class JournalBatchSerializer(serializers.ModelSerializer):
             "posted",
             "created_at",
             "updated_at",
+            "posting_date",
             "reference",
             "entries",
         )
