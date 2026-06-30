@@ -13,6 +13,7 @@ class SavingsDepositAdmin(admin.ModelAdmin):
         "amount",
         "payment_method",
         "deposit_type",
+        "transaction_date",
         "transaction_status",
         "created_at",
     )

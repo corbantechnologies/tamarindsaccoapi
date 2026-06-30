@@ -450,7 +450,7 @@ class MemberYearlySummaryView(APIView):
             # Yearly Totals
             total_yearly_deposits = SavingsDeposit.objects.filter(
                 savings_account=acc,
-                created_at__year=year,
+                transaction_date__year=year,
                 transaction_status="Completed",
                 balance_updated=True,
             ).aggregate(total=Sum("amount"))["total"] or Decimal("0")
@@ -458,7 +458,7 @@ class MemberYearlySummaryView(APIView):
             # Balance Brought Forward
             bf_deposits = SavingsDeposit.objects.filter(
                 savings_account=acc,
-                created_at__year__lt=year,
+                transaction_date__year__lt=year,
                 transaction_status="Completed",
                 balance_updated=True,
             ).aggregate(total=Sum("amount"))["total"] or Decimal("0")
@@ -469,8 +469,8 @@ class MemberYearlySummaryView(APIView):
                 # Monthly Aggregates
                 month_deposits_qs = SavingsDeposit.objects.filter(
                     savings_account=acc,
-                    created_at__year=year,
-                    created_at__month=month,
+                    transaction_date__year=year,
+                    transaction_date__month=month,
                     transaction_status="Completed",
                     balance_updated=True,
                 )
@@ -481,10 +481,10 @@ class MemberYearlySummaryView(APIView):
 
                 # Fetch Transactions
                 transactions = []
-                for deposit in month_deposits_qs.order_by("created_at"):
+                for deposit in month_deposits_qs.order_by("transaction_date"):
                     transactions.append(
                         {
-                            "date": deposit.created_at.date(),
+                            "date": deposit.transaction_date,
                             "type": "Savings Deposit",
                             "amount": deposit.amount,
                             "reference": deposit.reference,
