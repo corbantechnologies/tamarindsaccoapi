@@ -174,22 +174,16 @@ class MemberListView(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        Fetch is_member and is_sacco_admin field
-        Users with is_sacco_admin are also members
+        Fetch all non-superuser accounts
         """
-        return super().get_queryset().filter(is_member=True).prefetch_related(
-            "venture_accounts",
-            "savings",
-            "loan_applications",
-            "loan_accounts",
-            "guarantor_profile",
-        ) | super().get_queryset().filter(is_sacco_admin=True).prefetch_related(
+        return super().get_queryset().exclude(is_superuser=True).prefetch_related(
             "venture_accounts",
             "savings",
             "loan_applications",
             "loan_accounts",
             "guarantor_profile",
         )
+
 
 
 class MemberDetailView(generics.RetrieveUpdateDestroyAPIView):
